@@ -10,8 +10,9 @@ namespace MinervaApi.Models
 {
     public class MinervaContext : DbContext
     {
-        //public MinervaContext() : base("MinervaAzure") { }
-        public MinervaContext() : base() { }
+        public MinervaContext() : base("MinervaAzure") { }
+
+        //public MinervaContext() : base() { }
         
         public MinervaContext(string connection) : base(connection) { }
 

@@ -25,6 +25,7 @@ namespace MinervaApi.Controllers
     builder.EntitySet<DowntimeEvent>("DowntimeEvent"); 
     config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
     */
+    [AllowCrossSiteJson]
     public class EquipmentController : ODataController
     {
         private MinervaContext db = new MinervaContext();

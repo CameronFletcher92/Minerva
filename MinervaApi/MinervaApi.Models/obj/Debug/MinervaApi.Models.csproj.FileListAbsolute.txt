@@ -10,3 +10,15 @@ C:\Users\Peter Gleeson\Documents\Visual Studio 2013\Projects\MinervaApi\MinervaA
 C:\Users\Peter Gleeson\Documents\Visual Studio 2013\Projects\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.dll
 C:\Users\Peter Gleeson\Documents\Visual Studio 2013\Projects\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.pdb
 C:\Users\Peter Gleeson\Documents\Visual Studio 2013\Projects\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.csprojResolveAssemblyReference.cache
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\MinervaApi.Models.dll.config
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\MinervaApi.Models.dll
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\MinervaApi.Models.pdb
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\EntityFramework.dll
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\EntityFramework.xml
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.csprojResolveAssemblyReference.cache
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.Migrations.Initial.resources
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.csproj.GenerateResource.Cache
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.dll
+C:\Users\Peter Gleeson\Documents\GitHub\Minerva\MinervaApi\MinervaApi.Models\obj\Debug\MinervaApi.Models.pdb
