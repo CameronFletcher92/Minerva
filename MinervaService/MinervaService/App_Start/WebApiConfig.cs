@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.OData.Builder;
+using MinervaApi.Models;
 
 namespace MinervaService
 {
@@ -20,6 +22,12 @@ namespace MinervaService
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // odata routes
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<Equipment>("Equipment");
+            builder.EntitySet<DowntimeEvent>("DowntimeEvent"); 
+            config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
 
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);

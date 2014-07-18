@@ -7,48 +7,51 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using MinervaApi.Models;
 using MinervaService;
 
 namespace MinervaService.Controllers
 {
-    [EnableCors("*", "*", "*")]
-    public class DowntimeEventController : ApiController
+    /*
+    To add a route for this controller, merge these statements into the Register method of the WebApiConfig class. Note that OData URLs are case sensitive.
+
+    using System.Web.Http.OData.Builder;
+    using MinervaApi.Models;
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<DowntimeEvent>("DowntimeEvent");
+    builder.EntitySet<Equipment>("Equipments"); 
+    config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
+    */
+    public class DowntimeEventController : ODataController
     {
         private MinervaContext db = new MinervaContext();
 
-        // GET api/DowntimeEvent
-        [EnableQuery]
-        public IQueryable<DowntimeEvent> GetDowntimeEvents()
+        // GET odata/DowntimeEvent
+        [Queryable]
+        public IQueryable<DowntimeEvent> GetDowntimeEvent()
         {
             return db.DowntimeEvents;
         }
 
-        // GET api/DowntimeEvent/5
-        [ResponseType(typeof(DowntimeEvent))]
-        public IHttpActionResult GetDowntimeEvent(long id)
+        // GET odata/DowntimeEvent(5)
+        [Queryable]
+        public SingleResult<DowntimeEvent> GetDowntimeEvent([FromODataUri] long key)
         {
-            DowntimeEvent downtimeevent = db.DowntimeEvents.Find(id);
-            if (downtimeevent == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(downtimeevent);
+            return SingleResult.Create(db.DowntimeEvents.Where(downtimeevent => downtimeevent.Id == key));
         }
 
-        // PUT api/DowntimeEvent/5
-        public IHttpActionResult PutDowntimeEvent(long id, DowntimeEvent downtimeevent)
+        // PUT odata/DowntimeEvent(5)
+        public IHttpActionResult Put([FromODataUri] long key, DowntimeEvent downtimeevent)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != downtimeevent.Id)
+            if (key != downtimeevent.Id)
             {
                 return BadRequest();
             }
@@ -61,7 +64,7 @@ namespace MinervaService.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DowntimeEventExists(id))
+                if (!DowntimeEventExists(key))
                 {
                     return NotFound();
                 }
@@ -71,12 +74,11 @@ namespace MinervaService.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(downtimeevent);
         }
 
-        // POST api/DowntimeEvent
-        [ResponseType(typeof(DowntimeEvent))]
-        public IHttpActionResult PostDowntimeEvent(DowntimeEvent downtimeevent)
+        // POST odata/DowntimeEvent
+        public IHttpActionResult Post(DowntimeEvent downtimeevent)
         {
             if (!ModelState.IsValid)
             {
@@ -86,14 +88,49 @@ namespace MinervaService.Controllers
             db.DowntimeEvents.Add(downtimeevent);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = downtimeevent.Id }, downtimeevent);
+            return Created(downtimeevent);
         }
 
-        // DELETE api/DowntimeEvent/5
-        [ResponseType(typeof(DowntimeEvent))]
-        public IHttpActionResult DeleteDowntimeEvent(long id)
+        // PATCH odata/DowntimeEvent(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public IHttpActionResult Patch([FromODataUri] long key, Delta<DowntimeEvent> patch)
         {
-            DowntimeEvent downtimeevent = db.DowntimeEvents.Find(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DowntimeEvent downtimeevent = db.DowntimeEvents.Find(key);
+            if (downtimeevent == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(downtimeevent);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DowntimeEventExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(downtimeevent);
+        }
+
+        // DELETE odata/DowntimeEvent(5)
+        public IHttpActionResult Delete([FromODataUri] long key)
+        {
+            DowntimeEvent downtimeevent = db.DowntimeEvents.Find(key);
             if (downtimeevent == null)
             {
                 return NotFound();
@@ -102,7 +139,14 @@ namespace MinervaService.Controllers
             db.DowntimeEvents.Remove(downtimeevent);
             db.SaveChanges();
 
-            return Ok(downtimeevent);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        // GET odata/DowntimeEvent(5)/Equipment
+        [Queryable]
+        public SingleResult<Equipment> GetEquipment([FromODataUri] long key)
+        {
+            return SingleResult.Create(db.DowntimeEvents.Where(m => m.Id == key).Select(m => m.Equipment));
         }
 
         protected override void Dispose(bool disposing)
@@ -114,9 +158,9 @@ namespace MinervaService.Controllers
             base.Dispose(disposing);
         }
 
-        private bool DowntimeEventExists(long id)
+        private bool DowntimeEventExists(long key)
         {
-            return db.DowntimeEvents.Count(e => e.Id == id) > 0;
+            return db.DowntimeEvents.Count(e => e.Id == key) > 0;
         }
     }
 }

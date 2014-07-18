@@ -7,48 +7,51 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using MinervaApi.Models;
 using MinervaService;
 
 namespace MinervaService.Controllers
 {
-    [EnableCors("*", "*", "*")]
-    public class EquipmentController : ApiController
+    /*
+    To add a route for this controller, merge these statements into the Register method of the WebApiConfig class. Note that OData URLs are case sensitive.
+
+    using System.Web.Http.OData.Builder;
+    using MinervaApi.Models;
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Equipment>("Equipment");
+    builder.EntitySet<DowntimeEvent>("DowntimeEvent"); 
+    config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
+    */
+    public class EquipmentController : ODataController
     {
         private MinervaContext db = new MinervaContext();
 
-        // GET api/Equipment
-        [EnableQuery]
-        public IQueryable<Equipment> GetEquipments()
+        // GET odata/Equipment
+        [Queryable]
+        public IQueryable<Equipment> GetEquipment()
         {
             return db.Equipments;
         }
 
-        // GET api/Equipment/5
-        [ResponseType(typeof(Equipment))]
-        public IHttpActionResult GetEquipment(long id)
+        // GET odata/Equipment(5)
+        [Queryable]
+        public SingleResult<Equipment> GetEquipment([FromODataUri] long key)
         {
-            Equipment equipment = db.Equipments.Find(id);
-            if (equipment == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(equipment);
+            return SingleResult.Create(db.Equipments.Where(equipment => equipment.Id == key));
         }
 
-        // PUT api/Equipment/5
-        public IHttpActionResult PutEquipment(long id, Equipment equipment)
+        // PUT odata/Equipment(5)
+        public IHttpActionResult Put([FromODataUri] long key, Equipment equipment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != equipment.Id)
+            if (key != equipment.Id)
             {
                 return BadRequest();
             }
@@ -61,7 +64,7 @@ namespace MinervaService.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EquipmentExists(id))
+                if (!EquipmentExists(key))
                 {
                     return NotFound();
                 }
@@ -71,12 +74,11 @@ namespace MinervaService.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(equipment);
         }
 
-        // POST api/Equipment
-        [ResponseType(typeof(Equipment))]
-        public IHttpActionResult PostEquipment(Equipment equipment)
+        // POST odata/Equipment
+        public IHttpActionResult Post(Equipment equipment)
         {
             if (!ModelState.IsValid)
             {
@@ -86,14 +88,49 @@ namespace MinervaService.Controllers
             db.Equipments.Add(equipment);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = equipment.Id }, equipment);
+            return Created(equipment);
         }
 
-        // DELETE api/Equipment/5
-        [ResponseType(typeof(Equipment))]
-        public IHttpActionResult DeleteEquipment(long id)
+        // PATCH odata/Equipment(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public IHttpActionResult Patch([FromODataUri] long key, Delta<Equipment> patch)
         {
-            Equipment equipment = db.Equipments.Find(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Equipment equipment = db.Equipments.Find(key);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(equipment);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EquipmentExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(equipment);
+        }
+
+        // DELETE odata/Equipment(5)
+        public IHttpActionResult Delete([FromODataUri] long key)
+        {
+            Equipment equipment = db.Equipments.Find(key);
             if (equipment == null)
             {
                 return NotFound();
@@ -102,7 +139,14 @@ namespace MinervaService.Controllers
             db.Equipments.Remove(equipment);
             db.SaveChanges();
 
-            return Ok(equipment);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        // GET odata/Equipment(5)/DowntimeEvents
+        [Queryable]
+        public IQueryable<DowntimeEvent> GetDowntimeEvents([FromODataUri] long key)
+        {
+            return db.Equipments.Where(m => m.Id == key).SelectMany(m => m.DowntimeEvents);
         }
 
         protected override void Dispose(bool disposing)
@@ -114,9 +158,9 @@ namespace MinervaService.Controllers
             base.Dispose(disposing);
         }
 
-        private bool EquipmentExists(long id)
+        private bool EquipmentExists(long key)
         {
-            return db.Equipments.Count(e => e.Id == id) > 0;
+            return db.Equipments.Count(e => e.Id == key) > 0;
         }
     }
 }
