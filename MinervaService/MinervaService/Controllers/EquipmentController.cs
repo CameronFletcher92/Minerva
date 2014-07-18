@@ -7,12 +7,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using MinervaApi.Models;
 using MinervaService;
 
 namespace MinervaService.Controllers
 {
+    [EnableCors("*", "*", "*")]
     public class EquipmentController : ApiController
     {
         private MinervaContext db = new MinervaContext();
