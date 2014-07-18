@@ -130,6 +130,10 @@
     <Compile Include="Migrations\201407180209387_InitialCreate.Designer.cs">
       <DependentUpon>201407180209387_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407180753320_hierarchy.cs" />
+    <Compile Include="Migrations\201407180753320_hierarchy.Designer.cs">
+      <DependentUpon>201407180753320_hierarchy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MinervaContext.cs" />
     <Compile Include="Models\DowntimeEvent.cs" />
@@ -151,6 +155,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201407180209387_InitialCreate.resx">
       <DependentUpon>201407180209387_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407180753320_hierarchy.resx">
+      <DependentUpon>201407180753320_hierarchy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
