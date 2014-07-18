@@ -48,8 +48,32 @@ angular.module('minervaApp').controller('MainCtrl', function ($scope, DowntimeEv
 
     // equipment tree
     $scope.treeOptions = {
-        dataSource: EquipmentSvc.getDataSource(),
+        dataSource: EquipmentSvc.getHierarchicalDataSource(),
         dataTextField: 'Code'
+    };
+
+    $scope.equipGridOptions = {
+        dataSource: EquipmentSvc.getDataSource(),
+        height: 600,
+        filterable: true,
+        sortable: true,
+        pageable: true,
+
+        columns: [
+            {
+                field: 'Code',
+                title: 'Equipment Code'
+            },
+            {
+                field: 'Description',
+                title: 'Description'
+            },
+
+            // the controls
+            { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
+        ],
+
+        editable: "popup"
     };
 
 
