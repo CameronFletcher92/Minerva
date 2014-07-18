@@ -30,14 +30,14 @@ namespace MinervaService.Controllers
         private MinervaContext db = new MinervaContext();
 
         // GET odata/Equipment
-        [Queryable]
+        [EnableQuery]
         public IQueryable<Equipment> GetEquipment()
         {
             return db.Equipments;
         }
 
         // GET odata/Equipment(5)
-        [Queryable]
+        [EnableQuery]
         public SingleResult<Equipment> GetEquipment([FromODataUri] long key)
         {
             return SingleResult.Create(db.Equipments.Where(equipment => equipment.Id == key));
@@ -143,7 +143,7 @@ namespace MinervaService.Controllers
         }
 
         // GET odata/Equipment(5)/DowntimeEvents
-        [Queryable]
+        [EnableQuery]
         public IQueryable<DowntimeEvent> GetDowntimeEvents([FromODataUri] long key)
         {
             return db.Equipments.Where(m => m.Id == key).SelectMany(m => m.DowntimeEvents);
