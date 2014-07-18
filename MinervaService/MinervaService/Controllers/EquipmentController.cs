@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
@@ -25,6 +26,7 @@ namespace MinervaService.Controllers
     builder.EntitySet<DowntimeEvent>("DowntimeEvent"); 
     config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
     */
+    [EnableCors("*", "*", "*")]
     public class EquipmentController : ODataController
     {
         private MinervaContext db = new MinervaContext();
