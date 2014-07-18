@@ -9,34 +9,35 @@
  */
 angular.module('minervaApp')
     .controller('MainCtrl', function ($scope) {
-        // the base url
-        var crudServiceBaseUrl = 'http://MinervaService.cloudapp.net/api/DowntimeEvent';
+        // the downtime event url
+        var dtUrl = 'http://MinervaService.cloudapp.net/api/DowntimeEvent';
 
         // the options of the main grid
         $scope.gridOptions = {
+
             dataSource: {
                 type: 'odata',
                 // connect to the odata controller
                 transport: {
                     read: {
-                        url: crudServiceBaseUrl + '?$expand=Equipment',
+                        url: dtUrl + '?$expand=Equipment',
                         dataType: 'json'
                     },
                     create: {
-                        url: crudServiceBaseUrl,
+                        url: dtUrl,
                         type: "POST",
                         dataType: "json"
                     },
                     update: {
                         url: function (data) {
-                            return crudServiceBaseUrl + '(' + data['Id'] + ')';
+                            return dtUrl + '(' + data['Id'] + ')';
                         },
                         type: "PUT",
                         dataType: "json"
                     },
                     destroy: {
                         url: function (data) {
-                            return crudServiceBaseUrl + '(' + data['Id'] + ')';
+                            return dtUrl + '(' + data['Id'] + ')';
                         },
                         type: "DELETE",
                         dataType: "json"
@@ -105,5 +106,6 @@ angular.module('minervaApp')
             //toolbar: ["create"],
             editable: "popup"
         };
+
 
     });
