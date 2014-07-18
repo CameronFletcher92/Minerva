@@ -8,11 +8,12 @@
  * Controller of the minervaApp
  */
 angular.module('minervaApp').controller('MainCtrl', function ($scope, DowntimeEventSvc, EquipmentSvc) {
+    $scope.downtimeEvents = DowntimeEventSvc.getDataSource();
+    $scope.flatEquipments = EquipmentSvc.getDataSource();
+    $scope.hierarchicalEquipments = EquipmentSvc.getHierarchicalDataSource();
 
     // downtime event grid
     $scope.gridOptions = {
-        dataSource: DowntimeEventSvc.getDataSource(),
-
         // grid settings
         height: 600,
         filterable: true,
@@ -48,12 +49,10 @@ angular.module('minervaApp').controller('MainCtrl', function ($scope, DowntimeEv
 
     // equipment tree
     $scope.treeOptions = {
-        dataSource: EquipmentSvc.getHierarchicalDataSource(),
         dataTextField: 'Code'
     };
 
     $scope.equipGridOptions = {
-        dataSource: EquipmentSvc.getDataSource(),
         height: 600,
         filterable: true,
         sortable: true,
