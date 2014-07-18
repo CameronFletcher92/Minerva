@@ -12,12 +12,12 @@ namespace MinervaService.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(MinervaService.MinervaContext context)
         {
-            int numEquips = 100;
+            // initial setup
+            int numEquips = 30;
             List<string> equipNames = new List<string>() { "PUMP", "WELL", "TRUCK", "CONVEYER" };
             int timeSeed = 80;
             int daysAgo = 100;
@@ -28,10 +28,33 @@ namespace MinervaService.Migrations
                 equipNameCounts.Add(1);
             }
 
+            List<Equipment> sites = new List<Equipment>() { 
+                new Equipment()
+                {
+                    Code = "SITE1",
+                    Description = "The first site",
+                    Children = new List<Equipment>()
+                },
+                new Equipment()
+                {
+                    Code = "SITE2",
+                    Description = "The second site",
+                    Children = new List<Equipment>()
+                },
+                new Equipment()
+                {
+                    Code = "SITE3",
+                    Description = "The third site",
+                    Children = new List<Equipment>()
+                },
+            };
+
+            // begin seed
             Random rand = new Random();
-            List<Equipment> equips = new List<Equipment>();
             List<DowntimeEvent> downtimes;
             int cursor;
+
+
             for (int i = 0; i < numEquips; i++)
             {
                 Equipment equip = new Equipment();
@@ -54,12 +77,14 @@ namespace MinervaService.Migrations
                 }
 
                 equip.DowntimeEvents = downtimes;
-                equips.Add(equip);
+
+                // add this equipment to one of the sites
+                sites[rand.Next(sites.Count)].Children.Add(equip);
             }
 
             context.Equipments.AddOrUpdate(
                 e => e.Id,
-                equips.ToArray()
+                sites.ToArray()
             );
         }
     }

@@ -144,11 +144,25 @@ namespace MinervaService.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        // GET odata/Equipment(5)/Children
+        [EnableQuery]
+        public IQueryable<Equipment> GetChildren([FromODataUri] long key)
+        {
+            return db.Equipments.Where(m => m.Id == key).SelectMany(m => m.Children);
+        }
+
         // GET odata/Equipment(5)/DowntimeEvents
         [EnableQuery]
         public IQueryable<DowntimeEvent> GetDowntimeEvents([FromODataUri] long key)
         {
             return db.Equipments.Where(m => m.Id == key).SelectMany(m => m.DowntimeEvents);
+        }
+
+        // GET odata/Equipment(5)/Parent
+        [EnableQuery]
+        public SingleResult<Equipment> GetParent([FromODataUri] long key)
+        {
+            return SingleResult.Create(db.Equipments.Where(m => m.Id == key).Select(m => m.Parent));
         }
 
         protected override void Dispose(bool disposing)
