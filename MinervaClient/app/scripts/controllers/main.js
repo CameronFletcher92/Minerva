@@ -13,26 +13,24 @@ angular.module('minervaApp')
             dataSource: {
                 type: 'odata',
                 transport: {
-                    read: 'http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders'
+                    //read: 'http://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders'
+                    read: {
+                        url: 'http://MinervaService.cloudapp.net/api/DowntimeEvent?$expand=Equipment',
+                        dataType: 'json'
+                    }
                 },
 
                 // the schema allows for the drop-down filters to have types
                 schema: {
-                    /*
                     data: function(data) {
-                        return data.value;
+                        return data;
                     },
                     total: function(data) {
                         return data['odata.count'];
                     },
-                    */
                     model: {
                         fields: {
-                            OrderID: { type: 'number' },
-                            Freight: { type: 'number' },
-                            ShipName: { type: 'string' },
-                            OrderDate: { type: 'date' },
-                            ShipCity: { type: 'string' }
+                            Start : {type: 'date'}
                         }
                     }
                 },
@@ -59,24 +57,7 @@ angular.module('minervaApp')
             // column definitions for other titles and properties
             columns: [
                 {
-                    field: 'OrderID',
-                    filterable: false
-                },
-                {
-                    field: 'Freight'
-                },
-                {
-                    field: 'OrderDate',
-                    title: 'Order Date',
-                    format: '{0:MM/dd/yyyy}'
-                },
-                {
-                    field: 'ShipName',
-                    title: 'Ship Name'
-                },
-                {
-                    field: 'ShipCity',
-                    title: 'Ship City'
+                    field: 'Start'
                 }
             ]
         };
