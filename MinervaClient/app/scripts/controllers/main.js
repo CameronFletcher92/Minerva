@@ -73,7 +73,7 @@ angular.module('minervaApp').controller('MainCtrl', function ($scope) {
         // connect to the odata controller
         transport: {
             read: {
-                url: equipUrl,
+                url: equipUrl + '?$expand=Children&$filter=ParentId eq null',
                 dataType: 'json'
             }
         },
@@ -85,10 +85,10 @@ angular.module('minervaApp').controller('MainCtrl', function ($scope) {
                 return data['odata.count'];
             },
             model: {
-                id: "Id",
-                fields: {
-                    Code: {type: 'string', editable: false},
-                    Description: {type: 'string'}
+                id: 'Id',
+                children: 'Children',
+                hasChildren: function(item) {
+                    return item["Children"] && item["Children"].length > 0;
                 }
             }
         }
@@ -130,9 +130,10 @@ angular.module('minervaApp').controller('MainCtrl', function ($scope) {
         editable: "popup"
     };
 
+
     $scope.treeOptions = {
         dataSource: equipDataSource,
-        template: '{{dataItem.Code}}'
+        dataTextField: 'Code'
     };
 
 
