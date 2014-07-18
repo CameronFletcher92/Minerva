@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using System.Web.Http.OData;
 using MinervaApi.Models;
 using MinervaService;
 
@@ -20,6 +21,7 @@ namespace MinervaService.Controllers
         private MinervaContext db = new MinervaContext();
 
         // GET api/Equipment
+        [EnableQuery]
         public IQueryable<Equipment> GetEquipments()
         {
             return db.Equipments;
