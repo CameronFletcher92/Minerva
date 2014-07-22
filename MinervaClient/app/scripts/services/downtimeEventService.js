@@ -2,7 +2,7 @@
 angular.module('minervaApp').service('DowntimeEventSvc', function () {
 
     // downtime event data source
-    var baseUrl = 'http://MinervaService.cloudapp.net/api/DowntimeEvent';
+    var baseUrl = 'http://local.minerva.com:39658/api/DowntimeEvent';
     var dataSource = new kendo.data.DataSource({
         type: 'odata',
         // connect to the odata controller

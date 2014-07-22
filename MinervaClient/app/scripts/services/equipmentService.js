@@ -2,7 +2,8 @@
 angular.module('minervaApp').service('EquipmentSvc', function () {
 
     // equipment data source
-    var baseUrl = 'http://MinervaService.cloudapp.net/api/Equipment';
+    //var baseUrl = 'http://MinervaService.cloudapp.net/api/Equipment';
+    var baseUrl = 'http://local.minerva.com:39658/api/Equipment';
     var dataSource = new kendo.data.DataSource({
         type: 'odata',
         // connect to the odata controller
